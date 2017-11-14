@@ -2,14 +2,11 @@ $(document).ready(function() {
 	$("#login").click(function() {
 		$(this).html('<img src="/static/login/img/loading.gif" style="width:25px;height:auto;">');
 		email = $("email").val();
-		pass = $("password").val();
-		if(email == "" || pass == ""){
-			alert("Không được bỏ trống");
-		}
+		pass = $("password").val();		
 		$.ajax({
 			url: '/login',
 			type: 'POST',
-			data: $("form").serialize(),
+			data: $("form").serialize()
 		})
 		.done(function(data) {
 			$('#login').html("Đăng nhập");
@@ -26,4 +23,6 @@ $(document).ready(function() {
 		})
 
 	});
+
+	
 });
