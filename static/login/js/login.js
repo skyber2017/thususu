@@ -1,6 +1,11 @@
 $(document).ready(function() {
 	$("#login").click(function() {
 		$(this).html('<img src="/static/login/img/loading.gif" style="width:25px;height:auto;">');
+		email = $("email").val();
+		pass = $("password").val();
+		if(email == "" || pass == ""){
+			alert("Không được bỏ trống");
+		}
 		$.ajax({
 			url: '/login',
 			type: 'POST',
@@ -8,16 +13,16 @@ $(document).ready(function() {
 		})
 		.done(function(data) {
 			$('#login').html("Đăng nhập");
-			if(data != "True"){
-				console.log(data);
+			$('#result').removeClass('hidden');
+			$('#result').html(data.mess);
+			if(data.result){
+				window.location.href = '/';
 			}
-			else{
-				$("#result").removeClass('hidden');
-			}
+			//console.log(data);
 		})
 		.fail(function() {
 			$('#login').html("Đăng nhập");
-			alert("Đã có lỗi xảy ra! Vui lòng thử lại sau.");
+			$('#result').html("Đã có lỗi xảy ra. Vui lòng liên hệ Admin.")
 		})
 
 	});
