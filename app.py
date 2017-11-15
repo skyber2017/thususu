@@ -12,6 +12,13 @@ app.config['MYSQL_DATABASE_HOST'] = '115.84.183.142'
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 mysql.init_app(app)
 
+@app.route('/add',methods=["POST"])
+def add():
+	if request.method == "POST":
+		#request from ajax
+		return jsonify(status=0,message="Thêm mới thành công!")
+	return jsonify(status=1,message="Thêm mới thất bại!")
+
 
 
 @app.route('/check')

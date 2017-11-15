@@ -192,30 +192,60 @@
 
 		function add(user){
 			swal({
-			  title: 'Thêm mới',
-			  html:
-			    '<input id="_title" class="form-control"  placeholder="Tiêu đề">'+
-			    '<input id="deadline" class="form-control"  placeholder="Ngày hoàn thành">'+
-			    '<textarea id="_content" placeholder="Nội dung" class="form-control" rows="9"></textarea>',
-			  showCancelButton: true,
-			  focusConfirm: false,
-			  cancelButtonText:'Hủy bỏ',
-			  confirmButtonText: 'Xác nhận!',
-			  onOpen: function(){
-			  	$('#deadline').datepicker({dateFormat: 'dd/mm/yy'});
-			  },
-			  preConfirm: function () {
-			    return new Promise(function (resolve) {
-			      resolve([
-			       	//them ajax
-			      ])
-			    })
-			  }
-			}).then(function (result) {
-			  
-			}).catch(swal.noop)
+				  title: "Thêm mới!",
+				  html: '<input style="margin-bottom:20px;" type="text" class="form-control" placeholder="Tiêu đề" name="title">'+
+				  		'<input type="text" style="margin-bottom:20px;" class="form-control" placeholder="Deadline" id="datepicker" name="deadline">'+
+				  		'<textarea class="form-control" style="margin-bottom:20px;" rows="9" placeholder="Nội dung" name="content"></textarea>'
+				  		,				  
+				  showCancelButton: true,
+				  confirmButtonColor: "#DD6B55",
+				  confirmButtonText: "Xác nhận",
+				  cancelButtonText: "Hủy bỏ",
+				  closeOnConfirm: false,
+				  showLoaderOnConfirm: true,
+				  focusConfirm:false,
+				  onOpen:function(){
+				  	$('#datepicker').datepicker();
+				  },
+				  preConfirm: function () {
+				    return new Promise(function (resolve) {
+				      $.ajax({
+				      	url: '/add',
+				      	type: 'POST',
+				      	data: $('form').serialize(),
+				      	success: function(data){
+				      		resolve(data);
+				      	},
+				      	error:function(){
+				      		swal({
+				  				title : "Đã có lỗi xảy ra!",
+				  				text : "Lỗi không xác định. Vui lòng liên hệ Admin",
+				  				type : "error",
+				  			})
+				      	}
+				      })
+				     })
+				  }}).then(function (data) {
+					if(data.status == 0){
+						//var message = data.message;
+						swal({
+				  				title : "THÀNH CÔNG!",
+				  				text : data.message,
+				  				type : "success"
+				  			}).then(function(){
+					  			window.location.reload();
+					  		})
+				  	}
+				  	else{
+				  		swal({
+				  			title : "CÓ LỖI XẢY RA RỒI!",
+				  			text : data.message,
+				  			type : "error",
+				  		})
+				  	}
+				})
 		}
 	</script>
-	https://stackoverflow.com/questions/31493898/sweetalert-confirm-with-ajax-request
+	
 </body>
 </html>
