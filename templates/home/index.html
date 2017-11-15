@@ -192,25 +192,30 @@
 
 		function add(user){
 			swal({
-            title: "Are you sure?",
-            html: "<input type='text' />",
-            
-            showCancelButton: true,
-            confirmButtonColor: "#DD6B55",
-            confirmButtonText: "Yes, delete it!",
-            closeOnConfirm: false
-        }),
-            $.ajax({
-                url: "scriptDelete.php",
-                type: "POST",
-                data: {id: 5},
-                dataType: "html",
-                success: function () {
-                    swal("Done!","It was succesfully deleted!","success");
-                }
-            });
+			  title: 'Thêm mới',
+			  html:
+			    '<input id="_title" class="form-control"  placeholder="Tiêu đề">'+
+			    '<input id="deadline" class="form-control"  placeholder="Ngày hoàn thành">'+
+			    '<textarea id="_content" placeholder="Nội dung" class="form-control" rows="9"></textarea>',
+			  showCancelButton: true,
+			  focusConfirm: false,
+			  cancelButtonText:'Hủy bỏ',
+			  confirmButtonText: 'Xác nhận!',
+			  onOpen: function(){
+			  	$('#deadline').datepicker({dateFormat: 'dd/mm/yy'});
+			  },
+			  preConfirm: function () {
+			    return new Promise(function (resolve) {
+			      resolve([
+			       	//them ajax
+			      ])
+			    })
+			  }
+			}).then(function (result) {
+			  
+			}).catch(swal.noop)
 		}
 	</script>
-	<-- https://stackoverflow.com/questions/31493898/sweetalert-confirm-with-ajax-request ->>
+	https://stackoverflow.com/questions/31493898/sweetalert-confirm-with-ajax-request
 </body>
 </html>
