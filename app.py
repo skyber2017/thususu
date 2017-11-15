@@ -12,12 +12,11 @@ app.config['MYSQL_DATABASE_HOST'] = '115.84.183.142'
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 mysql.init_app(app)
 
+
+
 @app.route('/check')
 def check():
-	cursor = mysql.connect().cursor()
-	cursor.execute("SELECT * FROM users")
-	data = cursor.fetchone()
-	return str(data[3])
+	return render_template('check.html')
 
 @app.route('/')
 def index():

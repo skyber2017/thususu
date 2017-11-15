@@ -22,7 +22,7 @@ $(window).on("load resize ", function() {
 	  )
 	})
   });
-  
+ 
 	
 }).resize();
 
