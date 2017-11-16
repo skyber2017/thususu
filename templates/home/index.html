@@ -24,19 +24,17 @@
 	  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 	    <span class="navbar-toggler-icon"></span>
 	  </button>
-	  <a class="navbar-brand" href="#">HOME</a>
+	  <a class="navbar-brand" href="/">Trang chủ</a>
 
 	  <div class="collapse navbar-collapse" id="navbarSupportedContent" >
 	    <ul class="navbar-nav mr-auto">
 	      <li class="nav-item active">
-	        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+	        <a class="nav-link" href="#">Gửi báo cáo <span class="sr-only">(current)</span></a>
 	      </li>
 	      <li class="nav-item">
-	        <a class="nav-link" href="#">Link</a>
+	        <a class="nav-link" href="#">Liên hệ</a>
 	      </li>
-	      <li class="nav-item">
-	        <a class="nav-link disabled" href="#">Disabled</a>
-	      </li>
+	      
 	    </ul>
 	    <form class="form-inline my-2 my-lg-0">
 	    {% if session.get('user') %}
@@ -53,7 +51,7 @@
 		<section>
 		  <!--for demo wrap-->
 		  <div>
-		  	<button class="btn btn-primary float-right btnAdd" onclick="add('admin');">
+		  	<button class="btn btn-primary float-right btnAdd" onclick="add('{{ session.user }}');">
 		  		<i class="fa fa-plus"> THÊM MỚI</i>
 		  	</button>
 		  	<h1 id="time_now">
@@ -90,14 +88,26 @@
 		  <div class="tbl-content">
 		    <table cellpadding="0" cellspacing="0" border="0">
 		      <tbody>
+		      	
+		      	{%for i in data%}
+				
 		        <tr>
-		          <td style="width: 20px;">1</td>
+		          <td style="width: 20px;">{{i[0]}}</td>
 		          <td>
-		          	<button class="btn btn-link" onclick="info(1);">AUSTRALIAN COMPANY</button>
+		          	<button class="btn btn-link" onclick="info({{i[0]}});">{{i[5]}}</button>
 		          </td>
-		          <td>03/08/1997</td>
-		          <td>03/08/1997</td>
-		          <td>03/08/1997</td>
+		          <td id="timeInit{{i[0]}}"></td>
+		        	<script>
+		        		document.getElementById("timeInit{{i[0]}}").innerHTML = moment('{{i[2]}}').format('DD/MM/YYYY h:mm:ss');
+		        	</script>
+		          <td id="timeDeadline{{i[0]}}"></td>
+		          <script>
+		          	document.getElementById("timeDeadline{{i[0]}}").innerHTML = moment('{{i[3]}}').format('DD/MM/YYYY');
+		          </script>
+		          <td id="timeLast{{i[0]}}"></td>
+		          <script>
+		          	document.getElementById("timeLast{{i[0]}}").innerHTML = moment('{{i[4]}}').format('DD/MM/YYYY h:mm:ss');
+		          </script>
 		          <td class="text-center">
 		          	<button class="btn btn-success" onclick="edit(1);" >
 		          		<i class="fa fa-pencil-square-o fa-xs" aria-hidden="true"></i>
@@ -110,7 +120,7 @@
 		          	</button>
 		          </td>
 		        </tr>
-		        
+		        {% endfor%}
 		      </tbody>
 		    </table>
 		  </div>
@@ -131,12 +141,13 @@
 			swal({
 			  title: 'Bạn đã hoàn thành công việc!',
 			  text: "",
-			  type: 'success',
+			  type: 'question',
 			  showCancelButton: true,
 			  confirmButtonColor: '#3085d6',
 			  cancelButtonColor: '#d33',
 			  confirmButtonText: 'HOÀN THÀNH',
-			  cancelButtonText:'Hủy bỏ'
+			  cancelButtonText:'Hủy bỏ',
+			  focusConfirm: false
 			}).then(function () {
 			  swal(
 			    'RẤT TỐT!',
@@ -149,7 +160,7 @@
 		  	swal({
 			  title: 'Bạn có muốn xóa?',
 			  text: "Sau khi xóa thì không thể hoàn tác!",
-			  type: 'warning',
+			  type: 'question',
 			  showCancelButton: true,
 			  confirmButtonColor: '#3085d6',
 			  cancelButtonColor: '#d33',
@@ -166,7 +177,37 @@
 		  };
 
 		function info(id){
-			swal('Any fool can use a computer')
+
+			$.ajax({
+				url: '/info',
+				type: 'POST',				
+				data: {
+					id:id,
+					user: '{{session.get["user"]}}'
+				}
+				
+			})
+			.done(function(data) {
+				if(data.status == 0){
+					swal(data.content)
+				}
+				else{
+					swal({
+						title:"Đã có lỗi xảy ra",
+						text: data.message,
+						type:"error"
+					})
+				}
+			})
+			.fail(function() {
+				swal({
+					title:"Lỗi không xác định!",
+					text: "Hãy thông báo với Admin nhé!",
+					type: "error"
+				})
+			});
+			
+			
 		}
 
 		function edit(id){
@@ -197,9 +238,7 @@
 				  title: "Thêm mới!",
 				  html: '<input style="margin-bottom:20px;" type="text" class="form-control" placeholder="Tiêu đề" id="title">'+
 				  		'<input type="text" style="margin-bottom:20px;" class="form-control deadline" placeholder="Deadline" id="datepicker" >'+
-				  		'<textarea class="form-control" style="margin-bottom:20px;" rows="9" placeholder="Nội dung" id="content"></textarea>'
-				  		
-				  		,				  
+				  		'<textarea class="form-control" style="margin-bottom:20px;" rows="9" placeholder="Nội dung" id="content"></textarea>',				  
 				  showCancelButton: true,
 				  confirmButtonColor: "#DD6B55",
 				  confirmButtonText: "Xác nhận",

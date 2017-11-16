@@ -22,7 +22,7 @@ $(window).on("load resize ", function() {
 	  )
 	})
   });
- 
+ document.getElementById("timeInit").innerHTML = moment('{{i[2]}}').format('DD/MM/YYYY h:mm:ss');
 	
 }).resize();
 
