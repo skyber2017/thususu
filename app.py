@@ -1,7 +1,7 @@
 from flask import Flask,render_template,request,session,url_for,flash,redirect,jsonify
 from flaskext.mysql import MySQL
+from datetime import datetime
 import json
-
 mysql = MySQL()
 app = Flask(__name__)
 
@@ -15,9 +15,21 @@ mysql.init_app(app)
 @app.route('/add',methods=["POST"])
 def add():
 	if request.method == "POST":
-		#request from ajax
-		return jsonify(status=0,message="Thêm mới thành công!")
-	return jsonify(status=1,message="Thêm mới thất bại!")
+		data = request.json
+		user = data['user']
+		title= data['title']
+		deadline = data['deadline']
+		content = data['content']
+		init = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+		json = json.dumps(title:content)
+		if title:
+			cursor = mysql.connect().cursor()
+			cursor.execute("INSERT INTO job VALUES('','%s','%s','%s','%s')"%(user,init,deadline,init,json))
+			mysql.connect().commit()
+			return jsonify(status=0,message="Đã thêm thành công!")
+			#return jsonify(status=0,message="INSERT INTO job VALUES('','%s','%s','%s','%s')"%(user,init,deadline,init,json))
+		else:
+			return jsonify(status=1,message="Tiêu đề không được bỏ trống!")
 
 
 

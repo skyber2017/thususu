@@ -190,29 +190,39 @@
 			}).catch(swal.noop)
 		}
 
+		
+
 		function add(user){
 			swal({
 				  title: "Thêm mới!",
-				  html: '<input style="margin-bottom:20px;" type="text" class="form-control" placeholder="Tiêu đề" name="title">'+
-				  		'<input type="text" style="margin-bottom:20px;" class="form-control" placeholder="Deadline" id="datepicker" name="deadline">'+
-				  		'<textarea class="form-control" style="margin-bottom:20px;" rows="9" placeholder="Nội dung" name="content"></textarea>'
+				  html: '<input style="margin-bottom:20px;" type="text" class="form-control" placeholder="Tiêu đề" id="title">'+
+				  		'<input type="text" style="margin-bottom:20px;" class="form-control deadline" placeholder="Deadline" id="datepicker" >'+
+				  		'<textarea class="form-control" style="margin-bottom:20px;" rows="9" placeholder="Nội dung" id="content"></textarea>'
+				  		
 				  		,				  
 				  showCancelButton: true,
 				  confirmButtonColor: "#DD6B55",
 				  confirmButtonText: "Xác nhận",
 				  cancelButtonText: "Hủy bỏ",
-				  closeOnConfirm: false,
+				  
 				  showLoaderOnConfirm: true,
 				  focusConfirm:false,
 				  onOpen:function(){
-				  	$('#datepicker').datepicker();
+				  	$('#datepicker').datepicker({dateFormat: 'yy-mm-dd'});
+
 				  },
 				  preConfirm: function () {
 				    return new Promise(function (resolve) {
 				      $.ajax({
 				      	url: '/add',
 				      	type: 'POST',
-				      	data: $('form').serialize(),
+				      	contentType: 'application/json;charset=UTF-8',
+				      	data: JSON.stringify({
+				      		user:user,
+				      		title:$('#title').val(),
+				      		content:$('#content').val(),
+				      		deadline:$('.deadline').val()
+				      	}),
 				      	success: function(data){
 				      		resolve(data);
 				      	},
