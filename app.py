@@ -50,28 +50,8 @@ def info():
 @app.route('/add',methods=["POST"])
 def add():
 	try:
-		if request.method == "POST":
-			data = request.json
-			user = data['user']
-			title= data['title']
-			deadline = data['deadline']
-			content = data['content']
-			init = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-			#a = json.dumps({title:content})
-			if title:
-				conn = mysql.connect()
-				cursor = conn.cursor()
-				cursor.execute("SELECT title FROM job WHERE title='"+title+"'")
-				data = cursor.fetchone()
-				if data is None:
-					sql = "INSERT INTO job VALUES('','"+user+"','"+init+"','"+deadline+"','"+init+"','"+title+"','"+content+"')"
-					cursor.execute(sql)
-					conn.commit()
-					return jsonify(status=0,message="Chúc mừng! Đã thêm thành công!")
-				else:
-					return jsonify(status=1,message="Tiêu đề bị trùng! Đổi lại tiêu đề khác nhé!")
-			else:
-				return jsonify(status=1,message="Tiêu đề không được bỏ trống!")
+		
+		return jsonify(status=0,message="Chúc mừng! Đã thêm thành công!")
 	except:
 		return jsonify(status=1,message="Lỗi không xác định!")
 

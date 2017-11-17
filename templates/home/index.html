@@ -169,7 +169,7 @@
 			  confirmButtonText: 'Xác định xóa!',
 			  cancelButtonText:'Hủy bỏ',
 			  showLoaderOnConfirm:true
-			}).then(function () {
+			}).then(function (isConfirm) {
 			  $.ajax({
 			  	url: '/delete',
 			  	type: 'POST',			  	
@@ -211,7 +211,7 @@
 			swal({
 			  title: 'Đang tải dữ liệu!',
 			  text: 'Xin chờ chút!',	  
-			  timer: 1000,
+			  timer: 3000,
 			  onOpen: function () {
 			    swal.showLoading()
 			  }
