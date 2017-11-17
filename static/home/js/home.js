@@ -4,25 +4,6 @@ $(window).on("load resize ", function() {
   $('.tbl-header').css({'padding-right':scrollWidth});
 
  
-  $('#btnDone').click(function() {
-  	swal({
-	  title: 'Bạn đã hoàn thành công việc!',
-	  text: "",
-	  type: 'success',
-	  showCancelButton: true,
-	  confirmButtonColor: '#3085d6',
-	  cancelButtonColor: '#d33',
-	  confirmButtonText: 'HOÀN THÀNH',
-	  cancelButtonText:'Hủy bỏ'
-	}).then(function () {
-	  swal(
-	    'RẨT TỐT!',
-	    'Xin chúc mừng bạn đã hoàn thành công việc!',
-	    'success'
-	  )
-	})
-  });
- document.getElementById("timeInit").innerHTML = moment('{{i[2]}}').format('DD/MM/YYYY h:mm:ss');
 	
 }).resize();
 
