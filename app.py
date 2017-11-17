@@ -50,8 +50,29 @@ def info():
 @app.route('/add',methods=["POST"])
 def add():
 	try:
-		
-		return jsonify(status=0,message="Chúc mừng! Đã thêm thành công!")
+		if request.method == "POST":
+			user = request.form['user']
+			title = request.form['title']
+			deadline = request.form['deadline']
+			content = request.form['content']
+			init = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+			if title:
+				if user == session.get('user') or session.get('is_admin') == 1:
+					conn = mysql.connect()
+					cursor = conn.cursor()
+					cursor.execute("SELECT * FROM job WHERE title='"+title+"'")
+					data = cursor.fetchone()
+					if data is None:
+						sql = "INSERT INTO job VALUES('','"+user+"','"+init+"','"+deadline+"','"+init+"','"+title+"','"+content+"')"
+						cursor.execute(sql)
+						conn.commit()
+						return jsonify(status=0,message="Thêm mới thành công!")
+					else:
+						return jsonify(status=1,message="Tiêu đề bị trùng, hãy đổi tiêu đề khác nhé!")
+				else:
+					return jsonify(status=1,message="Bạn không đủ quyền truy cập!")
+			else:
+				return jsonify(status=1,message="Tiêu đề không được bỏ trống!")
 	except:
 		return jsonify(status=1,message="Lỗi không xác định!")
 
@@ -69,6 +90,7 @@ def index():
 		with mysql.connect().cursor() as cursor:
 			cursor.execute("SELECT * FROM job WHERE user='"+session.get('user')+"' ORDER BY id DESC")
 			data = cursor.fetchall()
+			
 		return render_template("home/index.html",data=data)
 	else:
 		return render_template("login/index.html")
