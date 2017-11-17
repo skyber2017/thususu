@@ -13,6 +13,7 @@ $(document).ready(function() {
 			$('#result').removeClass('hidden');
 			$('#result').html(data.mess);
 			if(data.result){
+				$(".content").html("Đang chuyển hướng.Xin đợi giây lát!");
 				window.location.href = '/';
 			}
 			//console.log(data);
