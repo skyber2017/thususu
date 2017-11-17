@@ -55,7 +55,7 @@ def add():
 			title = request.form['title']
 			deadline = request.form['deadline']
 			content = request.form['content']
-			init = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+			init = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 			if title:
 				if user == session.get('user') or session.get('is_admin') == 1:
 					conn = mysql.connect()
