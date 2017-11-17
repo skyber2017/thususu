@@ -114,7 +114,7 @@
 		          	<button class="btn btn-success" onclick="edit(1);" >
 		          		<i class="fa fa-pencil-square-o fa-xs" aria-hidden="true"></i>
 		          	</button>
-		          	<button class="btn btn-success"  onclick="del(1);">
+		          	<button class="btn btn-success"  onclick="del({{i[0]}});">
 		          		<i class="fa fa-trash"></i>
 		          	</button>
 		          	<button class="btn btn-primary" onclick="done(1);">
@@ -168,13 +168,42 @@
 			  cancelButtonColor: '#d33',
 			  confirmButtonText: 'Xác định xóa!',
 			  cancelButtonText:'Hủy bỏ',
-			  showLoaderOnConfirm: true
+			  showLoaderOnConfirm:true
 			}).then(function () {
-			  swal(
-			    'Xóa thành công!',
-			    '',
-			    'success'
-			  )
+			  $.ajax({
+			  	url: '/delete',
+			  	type: 'POST',			  	
+			  	data: {
+			  		id:id,
+			  		user:'{{session.user}}'
+			  	}
+			  })
+			  .done(function(data) {
+			  	if(data.status == 0){
+			  		swal({
+			  			title:"Xóa thành công!",
+			  			text:data.message,
+			  			type:"success"
+			  		}).then(function(){
+			  			window.location.reload()
+			  		})
+
+			  	}
+			  	else{
+			  		swal({
+			  			title:"Có lỗi xảy ra!",
+			  			text:data.message,
+			  			type:"error"
+			  		})
+			  	}
+			  })
+			  .fail(function() {
+			  	swal({
+			  		title:"Không thể kết nối!",
+			  		text:"Hãy thông báo cho Admin biết nhé!",
+			  		type:"error"
+			  	})
+			  });
 			})
 		  };
 
@@ -191,10 +220,7 @@
 			    $.ajax({
 					url: '/info',
 					type: 'POST',				
-					data: {
-						id:id,
-						user: '{{session.get["user"]}}'
-					}
+					
 					
 				})
 				.done(function(data) {
