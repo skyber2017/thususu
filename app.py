@@ -1,10 +1,10 @@
 from flask import Flask,render_template,request,session,url_for,flash,redirect,jsonify,json
 from flaskext.mysql import MySQL
 from datetime import datetime
-
+from flask_wtf.csrf import CSRFProtect
 mysql = MySQL()
 app = Flask(__name__)
-
+csrf = CSRFProtect(app)
 app.config['MYSQL_DATABASE_USER'] = 'thususu3115'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'thelove123'
 app.config['MYSQL_DATABASE_DB'] = 'thususu3115'
@@ -90,17 +90,19 @@ def index():
 		with mysql.connect().cursor() as cursor:
 			cursor.execute("SELECT * FROM job WHERE user='"+session.get('user')+"' ORDER BY id DESC")
 			data = cursor.fetchall()
-			
+
 		return render_template("home/index.html",data=data)
 	else:
 		return render_template("login/index.html")
-
+	
+@csrf.exempt
 @app.route('/login')
 def login():
 	if session.get('user'):
-		return redirect('')
+		return redirect('/')
 	return render_template('/login/index.html')
 
+@csrf.exempt
 @app.route("/login",methods=["POST"])
 def check_login():
 	try:

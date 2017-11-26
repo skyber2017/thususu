@@ -1,8 +1,7 @@
 $(document).ready(function() {
 	$("#login").click(function() {
 		$(this).html('<img src="/static/login/img/loading.gif" style="width:25px;height:auto;">');
-		email = $("email").val();
-		pass = $("password").val();		
+		
 		$.ajax({
 			url: '/login',
 			type: 'POST',
@@ -25,5 +24,5 @@ $(document).ready(function() {
 
 	});
 
-	
+
 });
